@@ -31,6 +31,8 @@ exports.startup = function() {
 	$tw.macros = $tw.modules.getModulesByTypeAsHashmap("macro");
 	// Set up the parsers
 	$tw.wiki.initParsers();
+	// Set up the data providers
+	$tw.wiki.initDataProviders();
 	// Set up the syncer object
 	$tw.syncer = new $tw.Syncer({wiki: $tw.wiki});
 	// Set up the command modules
