@@ -29,6 +29,10 @@ The tiddler dictionary format is an alternative syntax for data tiddlers:
 
 For example, the [[metrics of the Snow White theme|$:/themes/tiddlywiki/snowwhite/metrics]] are a tiddler dictionary.
 
+! The type field
+
+If the type cannot be recognized, types prefixes are removed until there is no more. For example, you can use `application/x-vocabulary+json` to designate a specific JSON vocabulary. If there is no data provider for this particular type, it will decode it using `application/json` instead.
+
 ! Accessing data within data tiddlers
 
 Currently, it is only possible to access the top level properties of the data using TextReference syntax.

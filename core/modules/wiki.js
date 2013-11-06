@@ -518,6 +518,42 @@ exports.getTiddlerAsJson = function(title) {
 };
 
 /*
+Find a handler for the mime type given. If no handler is found for the exact
+mime type, prefixes are removed from the mime type until a handler is found.
+Handlers are indexed by the mime type they support.
+
+For example `application/xhtml+xml` will be transformed in `application/xml` if
+no handler is found for xhtml.
+*/
+exports.findMimeTypeHandler = function(handlers, type) {
+  var handler;
+  if(typeof type != "string") return undefined;
+  while(!handler) {
+    handler = handlers[type];
+    if(handler) break;
+    var oldtype = type;
+    type = type.replace(/\/[^+]*\+/, "/");
+    if(oldtype == type) break;
+  }
+  return handler;
+};
+
+/*
+Initialize dataprovider modules
+*/
+exports.initDataProviders = function(moduleType) {
+  $tw.Wiki.dataproviders = {};
+  var self = this;
+  $tw.modules.forEachModuleOfType("dataprovider",function(title,module) {
+		for(var f in module) {
+			if($tw.utils.hop(module,f)) {
+				$tw.Wiki.dataproviders[f] = module[f]; // Store the data provider class
+			}
+		}
+	});
+};
+
+/*
 Get a tiddlers content as a JavaScript object. How this is done depends on the type of the tiddler:
 
 application/json: the tiddler JSON is parsed into an object
@@ -529,18 +565,11 @@ exports.getTiddlerData = function(title,defaultData) {
 	var tiddler = this.getTiddler(title),
 		data;
 	if(tiddler && tiddler.fields.text) {
-		switch(tiddler.fields.type) {
-			case "application/json":
-				// JSON tiddler
-				try {
-					data = JSON.parse(tiddler.fields.text);
-				} catch(ex) {
-					return defaultData;
-				}
-				return data;
-			case "application/x-tiddler-dictionary":
-				return $tw.utils.parseFields(tiddler.fields.text);
-		}
+	  var type = tiddler.fields.type || "text/vnd.tiddlywiki";
+	  var Provider = this.findMimeTypeHandler($tw.Wiki.dataproviders, type);
+	  if(Provider) {
+	    return Provider(tiddler, defaultData, {});
+	  }
 	}
 	return defaultData;
 };
