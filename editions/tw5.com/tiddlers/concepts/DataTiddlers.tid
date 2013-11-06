@@ -29,6 +29,13 @@ The tiddler dictionary format is an alternative syntax for data tiddlers:
 
 For example, the [[metrics of the Snow White theme|$:/themes/tiddlywiki/snowwhite/metrics]] are a tiddler dictionary.
 
+!! Tiddler JavaScript format
+
+The tiddler JavaScript format is an alternative that allows javascript computation in real time.
+
+* The ContentType field `type` is set to `application/javascript`
+* The `text` field is a series of JavaScript instructions. The `return` statement must be used to return the value corresponding to the data. `this` points to the tiddler object.
+
 ! The type field
 
 If the type cannot be recognized, types prefixes are removed until there is no more. For example, you can use `application/x-vocabulary+json` to designate a specific JSON vocabulary. If there is no data provider for this particular type, it will decode it using `application/json` instead.
@@ -51,4 +58,12 @@ b:two
 c:three
 ```
 
-With either of those definitions `{{TiddlerTitle##b}}` would have the value `two`.
+Or the equivalent JavaScript of type `application/javascript`:
+
+```
+var o = {a: "one", b: "two"};
+o.c = "three";
+return o;
+```
+
+With any of those definitions `{{TiddlerTitle##b}}` would have the value `two`.
