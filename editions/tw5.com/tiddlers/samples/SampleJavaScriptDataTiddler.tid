@@ -1,0 +1,8 @@
+title: SampleJavaScriptDataTiddler
+type: application/javascript
+tags: demo
+
+/*
+This is an example JavaScript data tiddler
+*/
+return {"a":"one","b":"two","c":"three"};
