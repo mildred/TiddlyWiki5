@@ -16,3 +16,4 @@ The content of the `<$setvariable>` widget is the scope for the value assigned t
 |!Attribute |!Description |
 |name |The name of the variable to assign |
 |value |The value to assign to the variable |
+|value-if-empty |The value to assign if `value` is empty |

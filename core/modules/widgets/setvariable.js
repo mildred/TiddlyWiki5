@@ -40,6 +40,7 @@ SetVariableWidget.prototype.execute = function() {
 	// Get our parameters
 	this.setName = this.getAttribute("name","currentTiddler");
 	this.setValue = this.getAttribute("value");
+	if(this.setValue == "") this.setValue = this.getAttribute("value-if-empty", this.setValue);
 	// Set context variable
 	this.setVariable(this.setName,this.setValue,this.parseTreeNode.params);
 	// Construct the child widgets
