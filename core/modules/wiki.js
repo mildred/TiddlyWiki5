@@ -676,12 +676,12 @@ Options include:
 exports.old_parseText = function(type,text,options) {
 	options = options || {};
 	// Select a parser
-	var Parser = $tw.Wiki.parsers[type];
+	var Parser = this.findMimeTypeHandler($tw.Wiki.parsers, type);
 	if(!Parser && $tw.config.fileExtensionInfo[type]) {
-		Parser = $tw.Wiki.parsers[$tw.config.fileExtensionInfo[type].type];
+		Parser = this.findMimeTypeHandler($tw.Wiki.parsers, $tw.config.fileExtensionInfo[type].type);
 	}
 	if(!Parser) {
-		Parser = $tw.Wiki.parsers[options.defaultType || "text/vnd.tiddlywiki"];
+		Parser = this.findMimeTypeHandler($tw.Wiki.parsers, options.defaultType || "text/vnd.tiddlywiki");
 	}
 	if(!Parser) {
 		return null;
