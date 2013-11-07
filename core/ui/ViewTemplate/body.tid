@@ -2,5 +2,7 @@ title: $:/core/ui/ViewTemplate/body
 tags: $:/tags/ViewTemplate
 
 <div class="body">
-<$transclude />
+<$setvariable name=template value={{!!viewtemplate}} value-if-empty=<<currentTiddler>>>
+<$transclude tiddler=<<template>> />
+</$setvariable>
 </div>
