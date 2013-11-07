@@ -31,6 +31,7 @@ Other fields used by the core are:
 |`plugin-type` |PluginTypeField |{{$:/docs/fields/plugin-type}} |
 |`source` |SourceField |{{$:/docs/fields/source}} |
 |`subtitle` |SubtitleField |{{$:/docs/fields/subtitle}} |
+|`viewtemplate` |ViewTemplateField |{{$:/docs/fields/viewtemplate}} |
 
 The TiddlyWebAdaptor uses a few more fields:
 
