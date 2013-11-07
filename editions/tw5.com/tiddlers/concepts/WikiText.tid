@@ -83,7 +83,7 @@ This will be monospaced
 
 ! Transclusion
 
-You can incorporate the content of one tiddler within another using the transclusion notation:
+You can incorporate the content of one tiddler within another using the transclusion notation wrapped around a TextReference:
 
 * `{{MyTiddler}}` transcludes a single tiddler
 * `{{MyTiddler||TemplateTitle}}` displays the tiddler through a specified [[TiddlerTemplate|TiddlerTemplates]]
@@ -245,6 +245,13 @@ Widgets provide rich functionality within WikiText. For example, the `<$video>` 
 ```
 <$video src="32001208" type="vimeo" />
 ```
+
+Attributes can be specified in various ways:
+
+* string literals (`attr="string"`)
+* transclusion using TextReference (`attr={{indirect}}`)
+* unquoted values (`attr=token`)
+* macro invocations or variable references (`attr=<<macro>>`)
 
 For full details of the available widgets, see the [[Docs]].
 
