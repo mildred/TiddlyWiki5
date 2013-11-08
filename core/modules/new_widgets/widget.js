@@ -87,8 +87,9 @@ Widget.prototype.getVariable = function(name,options) {
 	if(!node) {
 		return this.evaluateMacroModule(name,actualParams,options.defaultValue);
 	}
-	// Get the value
+	// Get the value, if it is wrapped in an array, avoid substitution
 	var value = node.variables[name].value || "";
+	if(typeof value != "string") return value[0];
 	// Substitute any parameters specified in the definition
 	value = this.substituteVariableParameters(value,node.variables[name].params,actualParams);
 	value = this.substituteVariableReferences(value);
@@ -171,8 +172,13 @@ Set the value of a context variable
 name: name of the variable
 value: value of the variable
 params: array of {name:, default:} for each parameter
+        undefined to avoid variable substitution
 */
 Widget.prototype.setVariable = function(name,value,params) {
+	if (params == undefined) {
+		value  = [value];
+		params = [];
+	}
 	this.variables[name] = {value: value, params: params};
 };
 
@@ -182,8 +188,11 @@ Check whether a given context variable value exists in the parent chain
 Widget.prototype.hasVariable = function(name,value) {
 	var node = this;
 	while(node) {
-		if($tw.utils.hop(node.variables,name) && node.variables[name].value === value) {
-			return true;
+		if($tw.utils.hop(node.variables,name)) {
+			var val = node.variables[name].value;
+			if(typeof val == "string" && cal === value || val[0] === value) {
+				return true;
+			}
 		}
 		node = node.parentWidget;
 	}
