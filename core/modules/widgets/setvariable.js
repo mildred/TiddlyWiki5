@@ -39,12 +39,35 @@ Compute the internal state of the widget
 SetVariableWidget.prototype.execute = function() {
 	// Get our parameters
 	this.setName = this.getAttribute("name","currentTiddler");
-	this.setValue = this.getAttribute("value");
-	if(this.setValue == "") this.setValue = this.getAttribute("value-if-empty", this.setValue);
+	this.setValue = this.findValue();
 	// Set context variable
 	this.setVariable(this.setName,this.setValue,this.parseTreeNode.params);
 	// Construct the child widgets
 	this.makeChildWidgets();
+};
+
+SetVariableWidget.prototype.findValue = function() {
+	// Find value and use value-if-empty if the value is empty
+	var value = this.getAttribute("value");
+	if(value == "")
+		value = this.getAttribute("value-if-empty", this.setValue);
+
+	// If the value is empty, find an expression value
+	if(value == undefined) {
+	  var expr = this.getAttribute("expr");
+	  if(expr) value = this.evalExpr(expr);
+	}
+
+	// If the value is empty, find a data value
+	if(value == undefined) {
+		var dataTiddler = this.getAttribute("data-tiddler");
+		if(dataTiddler == undefined && this.getAttribute("data") == "true")
+			dataTiddler = this.getVariable("currentTiddler");
+		if(dataTiddler != undefined)
+			value = $tw.wiki.getTiddlerData(dataTiddler);
+	}
+
+	return value;
 };
 
 /*
