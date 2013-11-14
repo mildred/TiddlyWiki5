@@ -1,9 +1,9 @@
-title: SetVariableWidget
 created: 201310241419
 creator: JeremyRuston
-modified: 201310300837
-modifier: JeremyRuston
+modified: 201311081056
+modifier: ANONYMOUS
 tags: widget
+title: SetVariableWidget
 
 ! Introduction
 
@@ -17,3 +17,5 @@ The content of the `<$setvariable>` widget is the scope for the value assigned t
 |name |The name of the variable to assign |
 |value |The value to assign to the variable |
 |value-if-empty |The value to assign if `value` is empty |
+|data-tiddler |The referenced tiddler data will be assigned to the variable |
+|data |If true, the current tiddler data will be assigned to the variable |
