@@ -1,0 +1,19 @@
+created: 201311071520
+creator: ANONYMOUS
+modified: 201311071552
+modifier: MildredKiLya
+tags: demo
+title: TimeTracker
+type: application/javascript
+viewtemplate: TimeTrackerTemplate
+
+var projects = {};
+var tiddlers = $tw.wiki.getTiddlersWithTag(this.fields.title);
+for(var i = 0; i < tiddlers.length; ++i) {
+  var tid = $tw.wiki.getTiddlerData(tiddlers[i], {});
+  for(project in tid) {
+  	if(!projects[project]) projects[project] = 0;
+    projects[project] += tid[project];
+  }
+}
+return projects;

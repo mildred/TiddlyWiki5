@@ -1,0 +1,13 @@
+created: 201311071518
+creator: ANONYMOUS
+modified: 201311071552
+modifier: MildredKiLya
+tags: demo TimeTracker
+title: TimeTrackerData1
+type: application/json
+viewtemplate: TimeTrackerTemplate
+
+{
+  "project1": 10,
+  "project2": 20
+}
