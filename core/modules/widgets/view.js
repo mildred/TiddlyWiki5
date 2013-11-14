@@ -49,6 +49,9 @@ ViewWidget.prototype.execute = function() {
 	this.viewField = this.getAttribute("field","text");
 	this.viewIndex = this.getAttribute("index");
 	this.viewFormat = this.getAttribute("format","text");
+	this.viewVariable = this.getAttribute("variable");
+	this.viewData = this.getAttribute("data") == "true";
+	this.viewExpr = this.getAttribute("expr");
 	this.viewTemplate = this.getAttribute("template","");
 	switch(this.viewFormat) {
 		case "htmlwikified":
@@ -75,6 +78,9 @@ ViewWidget.prototype.execute = function() {
 		case "jsencoded":
 			this.text = this.getValueAsJsEncoded();
 			break;
+		case "json":
+			this.text = this.getValueAsJSON();
+			break;
 		default: // "text"
 			this.text = this.getValueAsText();
 			break;
@@ -89,7 +95,13 @@ ViewWidget.prototype.getValue = function() {
 	// Get the value to display
 	var value,
 		tiddler = this.wiki.getTiddler(this.viewTitle);
-	if(tiddler) {
+	if(this.viewExpr) {
+		value = this.evalExpr(this.viewExpr);
+	}	else if(this.viewData) {
+		value = this.wiki.getTiddlerData(this.viewTitle);
+	} else if(this.viewVariable) {
+		value = this.getVariable(this.viewVariable);
+	} else if(tiddler) {
 		if(this.viewField === "text") {
 			// Calling getTiddlerText() triggers lazy loading of skinny tiddlers
 			value = this.wiki.getTiddlerText(this.viewTitle);
@@ -114,7 +126,16 @@ ViewWidget.prototype.getValueAsText = function() {
 	// Get the value to display
 	var text,
 		tiddler = this.wiki.getTiddler(this.viewTitle);
-	if(tiddler) {
+	if(this.viewExpr) {
+		text = this.evalExpr(this.viewExpr);
+		text = (text == undefined) ? "" : text.toString();
+	}	else if(this.viewData) {
+		text = this.wiki.getTiddlerData(this.viewTitle);
+		text = (text == undefined) ? "" : text.toString();
+	} else if(this.viewVariable) {
+		text = this.getVariable(this.viewVariable);
+		text = (text == undefined) ? "" : text.toString();
+	} else if(tiddler) {
 		if(this.viewField === "text") {
 			// Calling getTiddlerText() triggers lazy loading of skinny tiddlers
 			text = this.wiki.getTiddlerText(this.viewTitle);
@@ -179,6 +200,10 @@ ViewWidget.prototype.getValueAsStrippedComments = function() {
 
 ViewWidget.prototype.getValueAsJsEncoded = function() {
 	return $tw.utils.stringify(this.getValueAsText());
+};
+
+ViewWidget.prototype.getValueAsJSON = function() {
+	return JSON.stringify(this.getValue());
 };
 
 /*
