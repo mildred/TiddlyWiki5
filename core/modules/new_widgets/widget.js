@@ -200,6 +200,49 @@ Widget.prototype.hasVariable = function(name,value) {
 };
 
 /*
+List all variables that don't require expansion
+*/
+Widget.prototype.listVariables = function() {
+	var list = {};
+	var node = this;
+	while(node) {
+		for(var varname in node.variables) {
+			var val = node.variables[varname];
+			if(!$tw.utils.hop(list,varname) && val.value instanceof Array) {
+				list[varname] = val.value;
+			};
+		}
+		node = node.parentWidget;
+	}
+	return list;
+};
+
+/*
+Evaluate a JavaScript expression. If it looks like a variable access, fetch that
+variable in the widget context. A data() function is also available to fetch a
+data value and var() to get the content of a variable.
+*/
+Widget.prototype.evalExpr = function(expr) {
+	var currentTiddler = this.getVariable("currentTiddler");
+	var varname = expr.match(/([a-zA-Z_][a-zA-Z0-9_]*)([\.\[].+)?$/);
+	var context = this.listVariables();
+	if(!$tw.utils.hop(context,'data')) {
+		context.data = function(title) {
+			return this.wiki.getTiddlerData(title || currentTiddler);
+		};
+	}
+	if(varname && !$tw.utils.hop(context,varname)) {
+		varname = varname[1];
+		context[varname] = this.getVariable(varname);
+	}
+	try {
+    return $tw.utils.evalGlobal("exports = (" + expr + ");", context, currentTiddler);
+  } catch(e) {
+    console.log("Error in evaluating JavaScript expression in the context of " + currentTiddler + ": " + e.toString(), this, e);
+  }
+};
+
+/*
 Construct a qualifying string based on concatenating the values of a given variable in the parent chain
 */
 Widget.prototype.getStateQualifier = function(name) {
